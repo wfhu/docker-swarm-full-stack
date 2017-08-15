@@ -2,27 +2,27 @@
 Buildup a docker swarm cluster with opensource tools for production environment  
 使用开源工具，从零开始搭建完整生态的swarm生成环境集群
 
-Using the following tools:  
-主要使用以下工具：
+## Using the following tools:  
+## 主要使用以下工具：
 
 container management and Orchestration : Docker Swarm Mode  
-container monitor & display : cAdvisor(https://github.com/google/cadvisor) + prometheus(https://prometheus.io/) + grafana(https://grafana.com/)  
-node monitor & display : node_exporter(https://github.com/prometheus/node_exporter) + prometheus + grafana  
+container monitor & display : cAdvisor + prometheus + grafana  
+node monitor & display : node_exporter + prometheus + grafana  
 UI : portainer   
 log collection & display & search  : ELK +   
 
 集群管理和编排：Docker Swarm Mode   
-容器监控和展示：cAdvisor(https://github.com/google/cadvisor) + prometheus(https://prometheus.io/) + grafana(https://grafana.com/)   
-节点监控和展示：node_exporter(https://github.com/prometheus/node_exporter) + prometheus + grafana   
+容器监控和展示：cAdvisor + prometheus + grafana   
+节点监控和展示：node_exporter + prometheus + grafana   
 前端UI界面：portainer    
 日志搜集展示和搜索：ELK   
 
 
 
-First, let us setup the Swarm cluster   
-首先，我们先搭建集群  
+## First, let us setup the Swarm cluster   
+## 首先，我们先搭建集群  
 
-1. install the docker-ce tools
+### 1. install the docker-ce tools
 
 ```
 yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -47,21 +47,21 @@ docker run hello-world
 
 
 
-2. setup the swarm manager leader node
+### 2. setup the swarm manager leader node
 ```
 docker  swarm init --advertise-addr 192.168.33.5
 ```
 
 
 
-3. add two manager node, join this swarm as manager node(also as worker node)
+### 3. add two manager node, join this swarm as manager node(also as worker node)
 ```
 docker swarm join --token SWMTKN-1-YOUR-MANAGER-TOKEN 192.168.33.5:2377
 ```
 
 
 
-4. add two worker node
+### 4. add two worker node
 ```
 docker swarm join --token SWMTKN-1-YOUR-WORKER-TOKEN 192.168.33.5:2377
 
@@ -72,11 +72,11 @@ docker swarm join --token SWMTKN-1-YOUR-WORKER-TOKEN 192.168.33.5:2377
 
 
 
-Now, let start the monitor agents:  
-然后，我们需要把监控的agent进程起来 
+## Now, let start the monitor agents:  
+## 然后，我们需要把监控的agent进程起来 
 
-1. use cAdvisor to monitor container's CPU/Memory/Network  
-使用cAdvisor监控容器内的信息，主要包括CPU、内存、网络   
+### 1. use cAdvisor to monitor container's CPU/Memory/Network  
+### 使用cAdvisor监控容器内的信息，主要包括CPU、内存、网络   
 ```
 docker service create --name cadvisor \
     --mount type=bind,source=/var/lib/docker/,destination=/var/lib/docker,readonly \
@@ -90,8 +90,8 @@ docker service create --name cadvisor \
 ```
 
 
-2. use prometheus's node_exporter to monitor Swarm node's basic infomation   
-使用prometheus node_exporter监控Swarm集群节点的基本信息   
+### 2. use prometheus's node_exporter to monitor Swarm node's basic infomation   
+### 使用prometheus node_exporter监控Swarm集群节点的基本信息   
 ```
 docker service create --name node_exporter \
     --mount type=bind,source=/proc,destination=/host/proc,readonly \
@@ -106,8 +106,8 @@ docker service create --name node_exporter \
     -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
 ```
 
-3. configure the prometheus server, add the above newly added targets  
-配置prometheus服务，添加以上监控目标   
+### 3. configure the prometheus server, add the above newly added targets  
+### 配置prometheus服务，添加以上监控目标   
 ```
 # my global config
 global:
@@ -137,7 +137,12 @@ scrape_configs:
 
 
 After this, using my grafana template, you could see the Swarm cluster and Services running in your Swarm cluster
+到这里，使用我们的grafana模版，就可以看到Swarm集群和集群中运行的服务了
 
 ![grafana Docker Swarm Dashboard](/images/grafana.jpg)
+
+
+
+
 
 
