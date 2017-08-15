@@ -1,7 +1,17 @@
 # docker-swarm-full-stack
 Buildup a docker swarm cluster with opensource tools for production environment
 
+Using the following tools:
 
+container management and Orchestration : Docker Swarm Mode
+container monitor & display : cAdvisor + prometheus + grafana
+node monitor & display : node_exporter + prometheus + grafana
+UI : portainer
+log collection & display & search  : ELK + 
+
+
+
+First, let us setup the Swarm cluster
 
 1. install the docker-ce tools
 
@@ -27,18 +37,25 @@ docker run hello-world
 ```
 
 
+
 2. setup the swarm manager leader node
 ```
 docker  swarm init --advertise-addr 192.168.33.5
 ```
+
+
 
 3. add two manager node, join this swarm as manager node(also as worker node)
 ```
 docker swarm join --token SWMTKN-1-YOUR-MANAGER-TOKEN 192.168.33.5:2377
 ```
 
+
+
 4. add two worker node
 ```
 docker swarm join --token SWMTKN-1-YOUR-WORKER-TOKEN 192.168.33.5:2377
 
 ```
+
+
