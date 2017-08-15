@@ -136,11 +136,38 @@ scrape_configs:
 ```
 
 
-After this, using my grafana template, you could see the Swarm cluster and Services running in your Swarm cluster
+After this, using my grafana template, you could see the Swarm cluster and Services running in your Swarm cluster  
 到这里，使用我们的grafana模版，就可以看到Swarm集群和集群中运行的服务了
 
 ![grafana Docker Swarm Dashboard](/images/grafana.jpg)
 
+
+
+## Now we need try to setup the portainer management UI
+
+### first we need to reconfigure docker-engine to liston on TCP address, other than the UNIX socket
+```
+sed -i "/^ExecStart/c ExecStart=/usr/bin/dockerd -H unix:///var/run/docker.sock -H tcp://$(ip a |grep global |grep eth0 |awk '{print $2}' |cut -d'/' -f1):2375" /usr/lib/systemd/system/docker.service
+grep '^ExecStart' /usr/lib/systemd/system/docker.service
+systemctl daemon-reload
+systemctl restart docker
+```
+
+### Now, make a directory and start the portainer
+```
+mkdir -p /data/portainer_prod
+
+docker service create \
+    --name portainer \
+    --publish 9000:9000 \
+    --constraint 'node.role == manager' \
+    --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+    --mount type=bind,src=/data/portainer_prod,dst=/data \
+    portainer/portainer \
+    -H unix:///var/run/docker.sock
+````
+
+Then, you can visit http://your-ip-address:9000 to visit the portainer UI
 
 
 
