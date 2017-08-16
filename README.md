@@ -1,20 +1,22 @@
 # docker-swarm-full-stack
 Buildup a docker swarm cluster with opensource tools for production environment  
-使用开源工具，从零开始搭建完整生态的swarm生成环境集群
+使用开源工具，从零开始搭建完整生态的swarm mode生产环境集群
 
 ## Using the following tools:  
 ## 主要使用以下工具：
 
-container management and Orchestration : Docker Swarm Mode  
-container monitor & display : cAdvisor + prometheus + grafana  
-node monitor & display : node_exporter + prometheus + grafana  
-UI : portainer   
-log collection & display & search  : ELK +   
+cluster management and Orchestration : Docker Swarm Mode  
+container monitor : cAdvisor + prometheus  
+node monitor : node_exporter + prometheus  
+monitor display : grafana  
+cluster management UI : portainer    
+log collection & display & search  : ELK
 
 集群管理和编排：Docker Swarm Mode   
-容器监控和展示：cAdvisor + prometheus + grafana   
-节点监控和展示：node_exporter + prometheus + grafana   
-前端UI界面：portainer    
+容器监控：cAdvisor + prometheus    
+节点监控：node_exporter + prometheus    
+监控展示：grafana
+前端UI界面：portainer    
 日志搜集展示和搜索：ELK   
 
 
