@@ -7,17 +7,17 @@ Buildup a docker swarm cluster with opensource tools for production environment
 
 cluster management and Orchestration : Docker Swarm Mode  
 container monitor : cAdvisor + prometheus  
-node monitor : node_exporter + prometheus  
+node monitor : node_exporter + prometheus  
 monitor display : grafana  
 cluster management UI : portainer    
 log collection & display & search  : ELK+logspout  
 
 集群管理和编排：Docker Swarm Mode   
 容器监控：cAdvisor + prometheus    
-节点监控：node_exporter + prometheus      
-监控展示：grafana  
-前端UI界面：portainer    
-日志搜集展示和搜索：ELK+logspout  
+节点监控：node_exporter + prometheus  
+监控展示：grafana    
+前端UI界面：portainer  
+日志搜集展示和搜索：ELK+logspout    
 
 
 
