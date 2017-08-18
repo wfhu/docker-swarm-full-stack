@@ -2,6 +2,13 @@
 Buildup a docker swarm cluster with opensource tools for production environment  
 使用开源工具，从零开始搭建完整生态的swarm mode生产环境集群
 
+
+## Prerequisite
+* you should be able to setup a working ElasticSearch serivce, and a Kibana page
+* you'd better have created your own docker image registry
+* you need root access to the node servers, CentOS 7.3 is used within this demo
+
+
 ## Using the following tools:  
 ## 主要使用以下工具：
 
