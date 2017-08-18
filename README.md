@@ -21,7 +21,7 @@ log collection & display & search  : ELK+logspout
 
 
 
-## First, let us setup the Swarm cluster   
+## Part One, let us setup the Swarm cluster   
 ## 首先，我们先搭建集群  
 
 ### 1. install the docker-ce tools
@@ -74,7 +74,7 @@ docker swarm join --token SWMTKN-1-YOUR-WORKER-TOKEN 192.168.33.5:2377
 
 
 
-## Now, let start the monitor agents:  
+## Part Two, let start the monitor agents:  
 ## 然后，我们需要把监控的agent进程起来 
 
 ### 1. use cAdvisor to monitor container's CPU/Memory/Network    
@@ -141,7 +141,7 @@ After this, using my grafana template, you could see the Swarm cluster and Servi
 
 
 
-## Now we need try to setup the portainer management UI
+## Part Three, we need try to setup the portainer management UI
 
 ### first we need to reconfigure docker-engine to liston on TCP address, other than the UNIX socket
 ```
@@ -169,7 +169,7 @@ Then, you can visit http://your-ip-address:9000 to visit the portainer UI
 
 
 
-## Now, let start to collect stdout log and transfer the log to ElasticSearch
+## Part Four, let start to collect stdout log and transfer the log to ElasticSearch
 
 *container stdout* -> *logspout in each node* -> *logstash inside the Cluster* -> *outside ElasticSearch*
 
@@ -188,6 +188,20 @@ docker service create \
 ```
 
 ### 3. create the logspout service
+
+#### build your own image from *logspout*, add support to logstash
+```
+cd mylogspout && docker build -t mylogspout:v1 .
+```
+
+#### the tag/push your locally build image to YOUR-REGISTRY
+```
+# docker login -u YOUR-USER-NAME -p YOUR-PASSWORD  YOUR-REGISTRY-ADDRESS
+# docker tag mylogspout:v1 YOUR-REGISTRY-ADDRESS/mylogspout:v1
+# docker push YOUR-REGISTRY-ADDRESS/mylogspout:v1
+```
+
+#### now you can create your *logsplout* service based on the new image
 ```
 docker service create \
     --name mylogspout \
