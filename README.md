@@ -77,8 +77,7 @@ docker swarm join --token SWMTKN-1-YOUR-WORKER-TOKEN 192.168.33.5:2377
 ## Now, let start the monitor agents:  
 ## 然后，我们需要把监控的agent进程起来 
 
-### 1. use cAdvisor to monitor container's CPU/Memory/Network  
-### 使用cAdvisor监控容器内的信息，主要包括CPU、内存、网络   
+### 1. use cAdvisor to monitor container's CPU/Memory/Network    
 ```
 docker service create --name cadvisor \
     --mount type=bind,source=/var/lib/docker/,destination=/var/lib/docker,readonly \
@@ -92,8 +91,7 @@ docker service create --name cadvisor \
 ```
 
 
-### 2. use prometheus's node_exporter to monitor Swarm node's basic infomation   
-### 使用prometheus node_exporter监控Swarm集群节点的基本信息   
+### 2. use prometheus's node_exporter to monitor Swarm node's basic infomation     
 ```
 docker service create --name node_exporter \
     --mount type=bind,source=/proc,destination=/host/proc,readonly \
@@ -108,8 +106,7 @@ docker service create --name node_exporter \
     -collector.filesystem.ignored-mount-points "^/(sys|proc|dev|host|etc)($|/)"
 ```
 
-### 3. configure the prometheus server, add the above newly added targets  
-### 配置prometheus服务，添加以上监控目标   
+### 3. configure the prometheus server, add the above newly added targets    
 ```
 # my global config
 global:
@@ -139,9 +136,8 @@ scrape_configs:
 
 
 After this, using my grafana template, you could see the Swarm cluster and Services running in your Swarm cluster  
-到这里，使用我们的grafana模版，就可以看到Swarm集群和集群中运行的服务了
 
-![grafana Docker Swarm Dashboard](/images/grafana.jpg)
+![grafana Docker Swarm Dashboard](/images/grafana_template_screenshot.jpg)
 
 
 
@@ -170,6 +166,39 @@ docker service create \
 ````
 
 Then, you can visit http://your-ip-address:9000 to visit the portainer UI
+
+
+
+## Now, let start to collect stdout log and transfer the log to ElasticSearch
+
+*container stdout* -> *logspout in each node* -> *logstash inside the Cluster* -> *outside ElasticSearch*
+
+### 1. create a new overlay network for the log transfer, as logspout need to communicate with logstash
+```
+docker network create --driver overlay lognet
+```
+
+### 2. create the logstash service, listening on TCP/19300 port
+```
+docker service create \
+    --name mylogstash \
+    --network lognet \
+    --publish 19300:19300 \
+    logstash -e 'input { tcp { port => 19300 mode => "server" ssl_enable => false } } output { elasticsearch { hosts => ["YOUR-ElasticSearch-ADDRESS:PORT"] index => "my-docker-cluster"} }'
+```
+
+### 3. create the logspout service
+```
+docker service create \
+    --name mylogspout \
+    --network lognet \
+    --with-registry-auth \
+    --mode global \
+    --detach=true \
+    --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock,readonly \
+    -e ROUTE_URIS=logstash+tcp://mylogstash:19300 \
+    YOUR-REGISTRY-ADDRESS/mylogspout:v1 
+```
 
 
 
