@@ -193,6 +193,7 @@ docker service create \
 ```
 cd mylogspout && docker build -t mylogspout:v1 .
 ```
+if there's error, please make sure mylogspout/build.sh file has exec bit set, check [here](https://github.com/gliderlabs/logspout/issues/238) for more information
 
 #### the tag/push your locally build image to YOUR-REGISTRY
 ```
