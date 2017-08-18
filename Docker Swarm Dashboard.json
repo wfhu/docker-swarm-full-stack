@@ -38,7 +38,7 @@
   "annotations": {
     "list": []
   },
-  "description": "Docker Monitoring Template",
+  "description": "Docker Monitoring Template With Service Filter",
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
@@ -51,83 +51,6 @@
       "collapse": false,
       "height": "250px",
       "panels": [
-        {
-          "cacheTimeout": null,
-          "colorBackground": false,
-          "colorValue": false,
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "datasource": "${DS_ALVPCSH-PROMETHEUS}",
-          "editable": true,
-          "error": false,
-          "format": "percent",
-          "gauge": {
-            "maxValue": 100,
-            "minValue": 0,
-            "show": true,
-            "thresholdLabels": false,
-            "thresholdMarkers": true
-          },
-          "id": 4,
-          "interval": null,
-          "links": [],
-          "mappingType": 1,
-          "mappingTypes": [
-            {
-              "name": "value to text",
-              "value": 1
-            },
-            {
-              "name": "range to text",
-              "value": 2
-            }
-          ],
-          "maxDataPoints": 100,
-          "nullPointMode": "connected",
-          "nullText": null,
-          "postfix": "",
-          "postfixFontSize": "50%",
-          "prefix": "",
-          "prefixFontSize": "50%",
-          "rangeMaps": [
-            {
-              "from": "null",
-              "text": "N/A",
-              "to": "null"
-            }
-          ],
-          "span": 4,
-          "sparkline": {
-            "fillColor": "rgba(31, 118, 189, 0.18)",
-            "full": false,
-            "lineColor": "rgb(31, 120, 193)",
-            "show": false
-          },
-          "targets": [
-            {
-              "expr": "(sum(node_memory_MemTotal{job=~\"$Swarm\"}) - sum(node_memory_MemFree{job=~\"$Swarm\"}+node_memory_Buffers{job=~\"$Swarm\"}+node_memory_Cached{job=~\"$Swarm\"}) ) / sum(node_memory_MemTotal{job=~\"$Swarm\"}) * 100",
-              "interval": "10s",
-              "intervalFactor": 1,
-              "refId": "A",
-              "step": 10
-            }
-          ],
-          "thresholds": "65, 90",
-          "title": "Memory usage",
-          "type": "singlestat",
-          "valueFontSize": "80%",
-          "valueMaps": [
-            {
-              "op": "=",
-              "text": "N/A",
-              "value": "null"
-            }
-          ],
-          "valueName": "current"
-        },
         {
           "cacheTimeout": null,
           "colorBackground": false,
@@ -186,7 +109,7 @@
           },
           "targets": [
             {
-              "expr": "sum(sum by (container_name)( rate(container_cpu_usage_seconds_total{image!=\"\",job=~\"$Swarm\"}[1m] ) )) / count(node_cpu{mode=\"system\",job=~\"$Swarm\"}) * 100",
+              "expr": "sum(sum by (container_name)( rate(container_cpu_usage_seconds_total{image!=\"\",job=~\"$Swarm\",instance=~\"$ipaddress.*\"}[1m] ) )) / count(node_cpu{mode=\"system\",job=~\"$Swarm\",instance=~\"$ipaddress.*\"}) * 100",
               "interval": "10s",
               "intervalFactor": 1,
               "refId": "A",
@@ -194,7 +117,84 @@
             }
           ],
           "thresholds": "65, 90",
-          "title": "CPU usage",
+          "title": "Host CPU usage : $ipaddress",
+          "type": "singlestat",
+          "valueFontSize": "80%",
+          "valueMaps": [
+            {
+              "op": "=",
+              "text": "N/A",
+              "value": "null"
+            }
+          ],
+          "valueName": "current"
+        },
+        {
+          "cacheTimeout": null,
+          "colorBackground": false,
+          "colorValue": false,
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "datasource": "${DS_ALVPCSH-PROMETHEUS}",
+          "editable": true,
+          "error": false,
+          "format": "percent",
+          "gauge": {
+            "maxValue": 100,
+            "minValue": 0,
+            "show": true,
+            "thresholdLabels": false,
+            "thresholdMarkers": true
+          },
+          "id": 4,
+          "interval": null,
+          "links": [],
+          "mappingType": 1,
+          "mappingTypes": [
+            {
+              "name": "value to text",
+              "value": 1
+            },
+            {
+              "name": "range to text",
+              "value": 2
+            }
+          ],
+          "maxDataPoints": 100,
+          "nullPointMode": "connected",
+          "nullText": null,
+          "postfix": "",
+          "postfixFontSize": "50%",
+          "prefix": "",
+          "prefixFontSize": "50%",
+          "rangeMaps": [
+            {
+              "from": "null",
+              "text": "N/A",
+              "to": "null"
+            }
+          ],
+          "span": 4,
+          "sparkline": {
+            "fillColor": "rgba(31, 118, 189, 0.18)",
+            "full": false,
+            "lineColor": "rgb(31, 120, 193)",
+            "show": false
+          },
+          "targets": [
+            {
+              "expr": "(sum(node_memory_MemTotal{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}) - sum(node_memory_MemFree{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}+node_memory_Buffers{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}+node_memory_Cached{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}) ) / sum(node_memory_MemTotal{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}) * 100",
+              "interval": "10s",
+              "intervalFactor": 1,
+              "refId": "A",
+              "step": 10
+            }
+          ],
+          "thresholds": "65, 90",
+          "title": "Host Memory usage : $ipaddress",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -264,7 +264,7 @@
           },
           "targets": [
             {
-              "expr": "sum (container_fs_limit_bytes{job=~\"$Swarm\"} - container_fs_usage_bytes{job=~\"$Swarm\"}) / sum(container_fs_limit_bytes{job=~\"$Swarm\"})",
+              "expr": "sum (container_fs_limit_bytes{job=~\"$Swarm\",instance=~\"$ipaddress.*\"} - container_fs_usage_bytes{job=~\"$Swarm\",instance=~\"$ipaddress.*\"}) / sum(container_fs_limit_bytes{job=~\"$Swarm\",instance=~\"$ipaddress.*\"})",
               "interval": "10s",
               "intervalFactor": 1,
               "metric": "",
@@ -273,7 +273,7 @@
             }
           ],
           "thresholds": "65, 90",
-          "title": "Filesystem usage",
+          "title": "Filesystem usage for $ipaddress",
           "type": "singlestat",
           "valueFontSize": "80%",
           "valueMaps": [
@@ -334,7 +334,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum(rate(container_cpu_user_seconds_total{image!=\"\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m])) by (name))",
+              "expr": "sort_desc(sum(rate(container_cpu_user_seconds_total{image!=\"\",instance=~\"$ipaddress.*\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m])) by (name))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{name}}",
@@ -429,7 +429,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum(container_memory_usage_bytes{image!=\"\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}) by (name))",
+              "expr": "sort_desc(sum(container_memory_usage_bytes{image!=\"\",instance=~\"$ipaddress.*\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}) by (name))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
@@ -512,7 +512,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{image!=\"\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m] ) ))",
+              "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{image!=\"\",instance=~\"$ipaddress.*\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m] ) ))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
@@ -595,12 +595,12 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum by (name) (rate(container_network_transmit_bytes_total{image!=\"\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m] ) ))",
+              "expr": "sort_desc(sum by (name) (rate(container_network_transmit_bytes_total{image!=\"\",instance=~\"$ipaddress.*\",container_label_com_docker_swarm_service_name=~\"$service\",job=~\"$Swarm\"}[1m] ) ))",
               "intervalFactor": 2,
               "legendFormat": "{{ name }}",
               "metric": "container_network_transmit_bytes_total",
               "refId": "B",
-              "step": 2
+              "step": 4
             }
           ],
           "thresholds": [],
@@ -661,7 +661,7 @@
         "datasource": "${DS_ALVPCSH-PROMETHEUS}",
         "hide": 0,
         "includeAll": false,
-        "label": null,
+        "label": "",
         "multi": false,
         "name": "Swarm",
         "options": [],
@@ -681,11 +681,31 @@
         "datasource": "${DS_ALVPCSH-PROMETHEUS}",
         "hide": 0,
         "includeAll": true,
-        "label": null,
+        "label": "",
+        "multi": false,
+        "name": "ipaddress",
+        "options": [],
+        "query": "label_values(node_boot_time{job=\"$Swarm\"},instance)",
+        "refresh": 1,
+        "regex": "/(.*):.*/",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".+",
+        "current": {},
+        "datasource": "${DS_ALVPCSH-PROMETHEUS}",
+        "hide": 0,
+        "includeAll": true,
+        "label": "",
         "multi": false,
         "name": "service",
         "options": [],
-        "query": "label_values(container_cpu_user_seconds_total{job=\"$Swarm\"},container_label_com_docker_swarm_service_name)",
+        "query": "label_values(container_cpu_user_seconds_total{job=\"$Swarm\",instance=~\"$ipaddress.*\"},container_label_com_docker_swarm_service_name)",
         "refresh": 1,
         "regex": "",
         "sort": 1,
@@ -698,7 +718,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -727,6 +747,6 @@
     ]
   },
   "timezone": "browser",
-  "title": "Docker Swarm Dashboard",
-  "version": 7
+  "title": "Docker Dashboard",
+  "version": 38
 }
