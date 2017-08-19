@@ -178,7 +178,7 @@ Then, you can visit http://your-ip-address:9000 to visit the portainer UI
 
 ## Part Four, let start to collect stdout log and transfer the log to ElasticSearch
 
-*container stdout* -> *logspout in each node* -> *logstash inside the Cluster* -> *outside ElasticSearch*
+log stream like this : *container stdout* -> *logspout in each node* -> *logstash inside the Cluster* -> *outside ElasticSearch*
 
 ### 1. create a new overlay network for the log transfer, as logspout need to communicate with logstash
 ```
@@ -202,7 +202,7 @@ cd mylogspout && docker build -t mylogspout:v1 .
 ```
 if there's error, please make sure mylogspout/build.sh file has exec bit set, check [here](https://github.com/gliderlabs/logspout/issues/238) for more information
 
-#### the tag/push your locally build image to YOUR-REGISTRY
+#### then tag/push your locally build image to YOUR-REGISTRY
 ```
 # docker login -u YOUR-USER-NAME -p YOUR-PASSWORD  YOUR-REGISTRY-ADDRESS
 # docker tag mylogspout:v1 YOUR-REGISTRY-ADDRESS/mylogspout:v1
