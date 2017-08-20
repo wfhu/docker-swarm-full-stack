@@ -224,5 +224,6 @@ docker service create \
 
 
 
+## Part Five, collect log from files and transfer the log to ElasticSearch, using filebeat
 
 
