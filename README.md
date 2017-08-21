@@ -222,8 +222,10 @@ docker service create \
     YOUR-REGISTRY-ADDRESS/mylogspout:v1 
 ```
 
+*If your containers just print all logs to stdout/stderr, you'd better change the *[max-size](https://docs.docker.com/engine/admin/logging/json-file/)* of the JSON File log driver*
 
 
-## Part Five, collect log from files and transfer the log to ElasticSearch, using filebeat
+
+
 
 
