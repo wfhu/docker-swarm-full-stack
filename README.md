@@ -7,6 +7,7 @@ Buildup a docker swarm cluster with opensource tools for production environment
 * you should be able to setup a working ElasticSearch serivce, and a Kibana page
 * you'd better have created your own docker image registry
 * you need root access to the node servers, CentOS 7.3 is used within this demo
+* you have a working NFS service, used for persistent storage
 
 
 ## Using the following tools:  
@@ -18,13 +19,15 @@ node monitor : node_exporter + prometheus
 monitor display : grafana  
 cluster management UI : portainer    
 log collection & display & search  : ELK+logspout  
+persistent storage : NFS+NAS
 
 集群管理和编排：Docker Swarm Mode   
 容器监控：cAdvisor + prometheus    
 节点监控：node_exporter + prometheus  
 监控展示：grafana    
 前端UI界面：portainer  
-日志搜集展示和搜索：ELK+logspout    
+日志搜集展示和搜索：ELK+logspout    
+持久化存储：NFS+NAS  
 
 
 
