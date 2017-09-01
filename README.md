@@ -199,7 +199,7 @@ docker service create \
 
 ### 3. create the logspout service
 
-#### build your own image from *logspout*, add support to logstash
+#### build your own image from *logspout*, add logstash module
 ```
 cd mylogspout && docker build -t mylogspout:v1 .
 ```
